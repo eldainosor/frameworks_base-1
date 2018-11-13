@@ -17,6 +17,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.icu.text.NumberFormat
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -166,6 +167,10 @@ class DefaultClockController(
                 view.animateColorChange()
             }
         }
+
+        fun setTypeface(tf: Typeface) {
+            view.setTypeface(tf)
+        }
     }
 
     inner class LargeClockFaceController(
@@ -313,6 +318,11 @@ class DefaultClockController(
 
         pw.print("largeClock=")
         largeClock.view.dump(pw)
+    }
+
+    override fun setTypeface(tf: Typeface) {
+        smallClock.setTypeface(tf);
+        largeClock.setTypeface(tf);
     }
 
     companion object {

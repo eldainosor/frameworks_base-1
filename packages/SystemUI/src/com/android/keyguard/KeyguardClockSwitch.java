@@ -14,8 +14,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +64,8 @@ public class KeyguardClockSwitch extends RelativeLayout {
     // compensate for translation of parents subject to device screen
     // In this case, the translation comes from KeyguardStatusView
     public int screenOffsetYPadding = 0;
+
+    private static final String FONT_FAMILY = "sans-serif";
 
     /** Returns a region for the large clock to position itself, based on the given parent. */
     public static Rect getLargeClockRegion(ViewGroup parent) {
@@ -188,6 +192,15 @@ public class KeyguardClockSwitch extends RelativeLayout {
 
     public LogBuffer getLogBuffer() {
         return mLogBuffer;
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mClock != null) {
+            Typeface tf = Typeface.create(FONT_FAMILY, Typeface.NORMAL);
+            mClock.setTypeface(tf);
+        }
     }
 
     void setClock(ClockController clock, int statusBarState) {
