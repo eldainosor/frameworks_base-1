@@ -436,6 +436,8 @@ public final class SystemServer implements Dumpable {
             "com.android.server.deviceconfig.DeviceConfigInit$Lifecycle";
 
     private static final String TETHERING_CONNECTOR_CLASS = "android.net.ITetheringConnector";
+    private static final String FONT_SERVICE_CLASS =
+            "com.android.server.FontService$Lifecycle";
 
     private static final String PERSISTENT_DATA_BLOCK_PROP = "ro.frp.pst";
 
@@ -1544,6 +1546,11 @@ public final class SystemServer implements Dumpable {
             mSystemServiceManager.startService(UPDATABLE_DEVICE_CONFIG_SERVICE_CLASS);
             // Now that SettingsProvider is ready, reactivate SQLiteCompatibilityWalFlags
             SQLiteCompatibilityWalFlags.reset();
+            t.traceEnd();
+
+            // Manages fonts
+            t.traceBegin("StartFontService");
+            mSystemServiceManager.startService(FONT_SERVICE_CLASS);
             t.traceEnd();
 
             // Records errors and logs, for example wtf()
