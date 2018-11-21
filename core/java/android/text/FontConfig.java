@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import java.util.List;
 
 /**
  * Font configuration descriptions for System fonts.
@@ -695,6 +696,14 @@ public final class FontConfig implements Parcelable {
                     + ", mVariant=" + mVariant
                     + '}';
         }
+
+        /**
+         * Clears name
+         * @hide
+         */
+        public void clearName() {
+            mName = null;
+        }
     }
 
     /**
@@ -707,7 +716,7 @@ public final class FontConfig implements Parcelable {
      */
     public static final class NamedFamilyList implements Parcelable {
         private final List<FontFamily> mFamilies;
-        private final String mName;
+        private String mName;
 
         /** @hide */
         public NamedFamilyList(@NonNull List<FontFamily> families, @NonNull String name) {
