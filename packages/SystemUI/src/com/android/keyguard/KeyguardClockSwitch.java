@@ -197,10 +197,6 @@ public class KeyguardClockSwitch extends RelativeLayout {
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (mClock != null) {
-            Typeface tf = Typeface.create(FONT_FAMILY, Typeface.NORMAL);
-            mClock.setTypeface(tf);
-        }
     }
 
     void setClock(ClockController clock, int statusBarState) {
