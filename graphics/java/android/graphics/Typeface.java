@@ -1444,8 +1444,20 @@ public class Typeface {
                 Typeface base = systemFonts.get(alias.getOriginal());
                 Typeface newFace = base;
                 int weight = alias.getWeight();
+
+                // Hack for now
+                long ni;
+
+                // getSystemDefaultTypeface can return null, so manually set the native_instance then
+                if (base == null) {
+                    ni = 0;
+                } else {
+                    ni = fallbackTypeface.native_instance;
+                }
+
+                // back to regular code
                 if (weight != 400) {
-                    newFace = new Typeface(nativeCreateWeightAlias(base.native_instance, weight));
+                    newFace = new Typeface(nativeCreateWeightAlias(ni, weight));
                 }
                 systemFonts.put(alias.getName(), newFace);
             }
