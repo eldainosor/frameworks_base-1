@@ -702,7 +702,13 @@ public final class FontConfig implements Parcelable {
          * @hide
          */
         public void clearName() {
-            mName = null;
+            /*
+                TEMP EDIT!!!!!
+                TODO: Update fontfamily for new API changes
+                read: https://android.googlesource.com/platform/frameworks/base/+/9e233cd563fbb29234504ffe00cfc7faa76a6079%5E%21/
+            */
+
+            //mName = null;
         }
     }
 
