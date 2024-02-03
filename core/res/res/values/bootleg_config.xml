@@ -63,7 +63,7 @@
     <bool name="config_fingerprintWakeAndUnlock">true</bool>
 
     <!-- Whether Pixel props is enabled -->
-    <bool name="config_enablePixelProps">true</bool>
+    <bool name="config_enablePixelProps">false</bool>
 
     <!-- Whether to cancel fingerprint operation if not idle -->
     <bool name="config_fpCancelIfNotIdle">false</bool>
