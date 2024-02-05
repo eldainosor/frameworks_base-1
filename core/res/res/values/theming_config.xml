@@ -12,11 +12,11 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- True if the notifications should tint the app icon with a custom color -->
-    <bool name="config_allowNotificationIconTextTinting">false</bool>
-
     <!-- True if the notifications should tint the app name with the app icon or the accent color -->
-    <bool name="config_allowNotificationAppNameTextTinting">false</bool>
+    <bool name="config_allowNotificationAppNameTinting">false</bool>
+
+    <!-- True if the notifications should tint the app icon with a custom color -->
+    <bool name="config_useCustomAppIconTinting">false</bool>
 
     <!-- True if the notification app title should use notification_text_default_color instead of the app icon color
           (which can be altered when config_allowNotificationIconTextTinting is set to true) -->

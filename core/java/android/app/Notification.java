@@ -6512,7 +6512,7 @@ public class Notification implements Parcelable
          * Gets the secondary text color or use the app icon color for notification title.
          */
          private @ColorInt int resolveAppNameTinting(Notification.StandardTemplateParams p) {
-            if (mContext.getResources().getBoolean(R.bool.config_allowNotificationAppNameTextTinting)) {
+            if (mContext.getResources().getBoolean(R.bool.config_allowNotificationAppNameTinting)) {
                 if (mContext.getResources().getBoolean(R.bool.config_useCustomAppNameTextColor)) {
                   return mContext.getColor(R.color.notification_text_default_color);
                 }
@@ -6535,7 +6535,7 @@ public class Notification implements Parcelable
          * is the primary text color, otherwise it's the contrast-adjusted app-provided color.
          */
         private @ColorInt int getSmallIconColor(StandardTemplateParams p) {
-            if (mContext.getResources().getBoolean(R.bool.config_allowNotificationAppNameIconTinting)) {
+            if (mContext.getResources().getBoolean(R.bool.config_useCustomAppIconTinting)) {
                 return mContext.getColor(R.color.notification_icon_default_color);
             }
             return getColors(p).getContrastColor();
