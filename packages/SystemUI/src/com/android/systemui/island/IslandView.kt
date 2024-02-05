@@ -61,6 +61,7 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.view.WindowInsets
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
