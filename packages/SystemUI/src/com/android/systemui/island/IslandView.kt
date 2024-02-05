@@ -20,7 +20,6 @@ import android.app.ActivityOptions
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.TaskStackListener
-import android.app.WindowConfiguration.WINDOWING_MODE_FREEFORM
 import android.content.pm.ApplicationInfo
 import android.content.Context
 import android.content.Intent
@@ -32,7 +31,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
-import android.graphics.Rect
 import android.graphics.Region
 import android.graphics.Typeface
 import android.media.AudioManager
@@ -52,7 +50,6 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.util.IconDrawableFactory
 import android.util.Log
 import android.view.MotionEvent
@@ -61,7 +58,6 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowInsets
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.android.systemui.R
@@ -93,7 +89,6 @@ class IslandView : ExtendedFloatingActionButton {
     private var isTouchInsetsRemoved = true
     private var isExpanded = false
     private var isNowPlaying = false
-    private var isMessagingNotif = false
     private var isPostPoned = false
     private var isStackRegistered = false
     
@@ -265,7 +260,6 @@ class IslandView : ExtendedFloatingActionButton {
         titleSpannable = SpannableString(notifTitle.ifEmpty { notifContent }).apply {
             setSpan(StyleSpan(Typeface.BOLD), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
-        isMessagingNotif = notification.category == Notification.CATEGORY_MESSAGE
         val resources = context.resources
         val bitmap = drawableToBitmap(iconDrawable)
         val roundedIcon = CircleFramedDrawable(bitmap, this.iconSize)
@@ -416,12 +410,6 @@ class IslandView : ExtendedFloatingActionButton {
                     val options = ActivityOptions.makeBasic()
                     options.setPendingIntentBackgroundActivityStartMode(
                         ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
-                    if (isMessagingNotif) {
-                        val displayMetrics = context.getResources().getDisplayMetrics()
-                        options.launchWindowingMode = WINDOWING_MODE_FREEFORM
-                        val r = Rect(0, 0, displayMetrics.widthPixels / 2, displayMetrics.heightPixels / 2)
-                        options.launchBounds = r
-                    }
                     pendingIntent.send(context, 0, appIntent, null, null, null, options.toBundle())
                 } catch (e: Exception) {
                     appIntent?.let { context.startActivityAsUser(it, UserHandle.CURRENT) }
