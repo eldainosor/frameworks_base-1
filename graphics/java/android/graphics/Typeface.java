@@ -183,12 +183,15 @@ public class Typeface {
     static android.graphics.FontFamily[] sFallbackFonts;
 
     static final String FONTS_CONFIG = "fonts.xml";
+    static final String OEM_FONTS_CONFIG = "fonts_customization.xml";
 
     static final String SANS_SERIF_FAMILY_NAME = "sans-serif";
 
+    static final String OEM_FONT_CONFIG_LOCATION = "/product/etc/";
     static final String SYSTEM_FONT_CONFIG_LOCATION = "/system/etc/";
     static final String THEME_FONT_CONFIG_LOCATION = "/data/system/theme/fonts/";
     static final String THEME_FONT_DIR_LOCATION = "/data/system/theme/fonts/";
+    static final String OEM_FONT_DIR_LOCATION = "/product/fonts/";
     static final String SYSTEM_FONT_DIR_LOCATION = "/system/fonts/";
 
     /**
@@ -1376,6 +1379,7 @@ public class Typeface {
     }
     private static void init() {
         // Load font config and initialize Minikin state
+        File oemConfigFile = new File(OEM_FONT_CONFIG_LOCATION, OEM_FONTS_CONFIG);
         File systemConfigFile = new File(SYSTEM_FONT_CONFIG_LOCATION, FONTS_CONFIG);
         File themeConfigFile = new File(THEME_FONT_CONFIG_LOCATION, FONTS_CONFIG);
         File configFile = null;
@@ -1391,6 +1395,7 @@ public class Typeface {
         try {
             FontConfig fontConfig = FontListParser.parse(configFile,
                     fontDir);
+            FontConfig oemFontConfig = null;
             FontConfig systemFontConfig = null;
             // If the fonts are coming from a theme, we will need to make sure that we include
             // any font families from the system fonts that the theme did not include.
@@ -1401,6 +1406,15 @@ public class Typeface {
                 addMissingFontFamilies(systemFontConfig, fontConfig);
                 addMissingFontAliases(systemFontConfig, fontConfig);
             }
+
+            // Lets not forget about OEM fonts, include them regardless of the theme
+            if (oemConfigFile.exists()) {
+                oemFontConfig = FontListParser.parse(oemConfigFile, OEM_FONT_CONFIG_LOCATION);
+                addFallbackFontsForFamilyName(oemFontConfig, fontConfig, SANS_SERIF_FAMILY_NAME);
+                addMissingFontFamilies(oemFontConfig, fontConfig);
+                addMissingFontAliases(oemFontConfig, fontConfig);
+            }
+
             Map<String, ByteBuffer> bufferForPath = new HashMap<String, ByteBuffer>();
             List<android.graphics.FontFamily> familyList =
                     new ArrayList<android.graphics.FontFamily>();
