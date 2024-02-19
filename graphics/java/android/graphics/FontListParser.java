@@ -85,11 +85,26 @@ public class FontListParser {
     }
 
     public static FontConfig parse(File configFilename, String fontDir) throws XmlPullParserException, IOException {
+        // This is to parse custom fonts from the default oem folder
+        // TODO: Implement a way bettter approach
+        return parse(configFilename, fontDir, "/product/etc/fonts_customization.xml", "/product/fonts/");
+    }
+
+    public static FontConfig parse(File configFilename, String fontDir, String oemCustomizationXmlPath, String productFontDir)
+            throws XmlPullParserException, IOException {
+        FontCustomizationParser.Result oemCustomization;
+        try (InputStream oemIs = new FileInputStream(oemCustomizationXmlPath)) {
+            oemCustomization = FontCustomizationParser.parse(oemIs, productFontDir,
+                    null);
+        } catch (IOException e) {
+            // OEM customization may not exists. Ignoring
+            oemCustomization = new FontCustomizationParser.Result();
+        }
         try (InputStream is = new BufferedInputStream(new FileInputStream(configFilename))) {
             XmlPullParser parser = Xml.newPullParser();
             parser.setInput(is, null);
             parser.nextTag();
-            return readFamilies(parser, fontDir, new FontCustomizationParser.Result(), null,
+            return readFamilies(parser, fontDir, oemCustomization, null,
                 0, 0, true);
         }
     }
