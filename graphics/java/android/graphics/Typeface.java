@@ -183,15 +183,12 @@ public class Typeface {
     static android.graphics.FontFamily[] sFallbackFonts;
 
     static final String FONTS_CONFIG = "fonts.xml";
-    static final String OEM_FONTS_CONFIG = "fonts_customization.xml";
 
     static final String SANS_SERIF_FAMILY_NAME = "sans-serif";
 
-    static final String OEM_FONT_CONFIG_LOCATION = "/product/etc/";
     static final String SYSTEM_FONT_CONFIG_LOCATION = "/system/etc/";
     static final String THEME_FONT_CONFIG_LOCATION = "/data/system/theme/fonts/";
     static final String THEME_FONT_DIR_LOCATION = "/data/system/theme/fonts/";
-    static final String OEM_FONT_DIR_LOCATION = "/product/fonts/";
     static final String SYSTEM_FONT_DIR_LOCATION = "/system/fonts/";
 
     /**
@@ -1383,7 +1380,6 @@ public class Typeface {
         File themeConfigFile = new File(THEME_FONT_CONFIG_LOCATION, FONTS_CONFIG);
         File configFile = null;
         String fontDir;
-        String oemConfigFile = OEM_FONT_CONFIG_LOCATION + OEM_FONTS_CONFIG;
         if (themeConfigFile.exists()) {
             // /data/system/theme/fonts/ exists so use it and copy default fonts
             configFile = themeConfigFile;
@@ -1394,14 +1390,13 @@ public class Typeface {
         }
         try {
             FontConfig fontConfig = FontListParser.parse(configFile,
-                    fontDir, oemConfigFile, OEM_FONT_CONFIG_LOCATION);
+                    fontDir);
             FontConfig systemFontConfig = null;
             // If the fonts are coming from a theme, we will need to make sure that we include
             // any font families from the system fonts that the theme did not include.
             // NOTE: All the system font families without names ALWAYS get added.
             if (configFile == themeConfigFile) {
-                systemFontConfig = FontListParser.parse(systemConfigFile, SYSTEM_FONT_DIR_LOCATION,
-                                                    oemConfigFile, OEM_FONT_CONFIG_LOCATION);
+                systemFontConfig = FontListParser.parse(systemConfigFile, SYSTEM_FONT_DIR_LOCATION);
                 addFallbackFontsForFamilyName(systemFontConfig, fontConfig, SANS_SERIF_FAMILY_NAME);
                 addMissingFontFamilies(systemFontConfig, fontConfig);
                 addMissingFontAliases(systemFontConfig, fontConfig);
