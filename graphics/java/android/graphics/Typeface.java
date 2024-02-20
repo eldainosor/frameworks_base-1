@@ -1379,11 +1379,11 @@ public class Typeface {
     }
     private static void init() {
         // Load font config and initialize Minikin state
-        File oemConfigFile = new File(OEM_FONT_CONFIG_LOCATION, OEM_FONTS_CONFIG);
         File systemConfigFile = new File(SYSTEM_FONT_CONFIG_LOCATION, FONTS_CONFIG);
         File themeConfigFile = new File(THEME_FONT_CONFIG_LOCATION, FONTS_CONFIG);
         File configFile = null;
         String fontDir;
+        String oemConfigFile = OEM_FONT_CONFIG_LOCATION + OEM_FONTS_CONFIG;
         if (themeConfigFile.exists()) {
             // /data/system/theme/fonts/ exists so use it and copy default fonts
             configFile = themeConfigFile;
@@ -1394,25 +1394,17 @@ public class Typeface {
         }
         try {
             FontConfig fontConfig = FontListParser.parse(configFile,
-                    fontDir);
-            FontConfig oemFontConfig = null;
+                    fontDir, oemConfigFile, OEM_FONT_CONFIG_LOCATION);
             FontConfig systemFontConfig = null;
             // If the fonts are coming from a theme, we will need to make sure that we include
             // any font families from the system fonts that the theme did not include.
             // NOTE: All the system font families without names ALWAYS get added.
             if (configFile == themeConfigFile) {
-                systemFontConfig = FontListParser.parse(systemConfigFile, SYSTEM_FONT_DIR_LOCATION);
+                systemFontConfig = FontListParser.parse(systemConfigFile, SYSTEM_FONT_DIR_LOCATION,
+                                                    oemConfigFile, OEM_FONT_CONFIG_LOCATION);
                 addFallbackFontsForFamilyName(systemFontConfig, fontConfig, SANS_SERIF_FAMILY_NAME);
                 addMissingFontFamilies(systemFontConfig, fontConfig);
                 addMissingFontAliases(systemFontConfig, fontConfig);
-            }
-
-            // Lets not forget about OEM fonts, include them regardless of the theme
-            if (oemConfigFile.exists()) {
-                oemFontConfig = FontListParser.parse(oemConfigFile, OEM_FONT_CONFIG_LOCATION);
-                addFallbackFontsForFamilyName(oemFontConfig, fontConfig, SANS_SERIF_FAMILY_NAME);
-                addMissingFontFamilies(oemFontConfig, fontConfig);
-                addMissingFontAliases(oemFontConfig, fontConfig);
             }
 
             Map<String, ByteBuffer> bufferForPath = new HashMap<String, ByteBuffer>();
