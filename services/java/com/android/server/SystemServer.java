@@ -442,6 +442,8 @@ public final class SystemServer implements Dumpable {
             "/apex/com.android.devicelock/javalib/service-devicelock.jar";
 
     private static final String TETHERING_CONNECTOR_CLASS = "android.net.ITetheringConnector";
+    private static final String FONT_SERVICE_CLASS =
+            "com.android.server.FontService$Lifecycle";
 
     private static final String APP_LOCK_SERVICE_CLASS =
             "com.android.server.app.AppLockManagerService$Lifecycle";
@@ -1567,6 +1569,11 @@ public final class SystemServer implements Dumpable {
             mSystemServiceManager.startService(UPDATABLE_DEVICE_CONFIG_SERVICE_CLASS);
             // Now that SettingsProvider is ready, reactivate SQLiteCompatibilityWalFlags
             SQLiteCompatibilityWalFlags.reset();
+            t.traceEnd();
+
+            // Manages fonts
+            t.traceBegin("StartFontService");
+            mSystemServiceManager.startService(FONT_SERVICE_CLASS);
             t.traceEnd();
 
             // Records errors and logs, for example wtf()

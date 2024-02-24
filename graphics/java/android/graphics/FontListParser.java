@@ -33,6 +33,7 @@ import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -81,6 +82,31 @@ public class FontListParser {
         parser.nextTag();
         return readFamilies(parser, "/system/fonts/", new FontCustomizationParser.Result(), null,
                 0, 0, true);
+    }
+
+    public static FontConfig parse(File configFilename, String fontDir) throws XmlPullParserException, IOException {
+        // This is to parse custom fonts from the default oem folder
+        // TODO: Implement a way bettter approach
+        return parse(configFilename, fontDir, "/product/etc/fonts_customization.xml", "/product/fonts/");
+    }
+
+    public static FontConfig parse(File configFilename, String fontDir, String oemCustomizationXmlPath, String productFontDir)
+            throws XmlPullParserException, IOException {
+        FontCustomizationParser.Result oemCustomization;
+        try (InputStream oemIs = new FileInputStream(oemCustomizationXmlPath)) {
+            oemCustomization = FontCustomizationParser.parse(oemIs, productFontDir,
+                    null);
+        } catch (IOException e) {
+            // OEM customization may not exists. Ignoring
+            oemCustomization = new FontCustomizationParser.Result();
+        }
+        try (InputStream is = new BufferedInputStream(new FileInputStream(configFilename))) {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setInput(is, null);
+            parser.nextTag();
+            return readFamilies(parser, fontDir, oemCustomization, null,
+                0, 0, true);
+        }
     }
 
     /**
@@ -357,6 +383,10 @@ public class FontListParser {
             @Nullable Map<String, File> updatableFontMap,
             boolean allowNonExistingFile)
             throws XmlPullParserException, IOException {
+
+        if (!fontDir.endsWith("/")) {
+            fontDir = fontDir + "/";
+        }
 
         String indexStr = parser.getAttributeValue(null, ATTR_INDEX);
         int index = indexStr == null ? 0 : Integer.parseInt(indexStr);

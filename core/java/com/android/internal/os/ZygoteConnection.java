@@ -25,6 +25,7 @@ import static com.android.internal.os.ZygoteConnectionConstants.WRAPPED_PID_TIME
 
 import android.compat.annotation.UnsupportedAppUsage;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Typeface;
 import android.net.Credentials;
 import android.net.LocalSocket;
 import android.os.Parcel;
@@ -186,6 +187,10 @@ class ZygoteConnection {
                     return null;
                 }
 
+                if (parsedArgs.refreshTypeface) {
+                    return handleRefreshTypeface(zygoteServer);
+                }
+
                 if (parsedArgs.mPermittedCapabilities != 0
                         || parsedArgs.mEffectiveCapabilities != 0) {
                     throw new ZygoteSecurityException("Client may not specify capabilities: "
@@ -316,6 +321,7 @@ class ZygoteConnection {
                     parsedArgs.mHiddenApiAccessLogSampleRate,
                     parsedArgs.mHiddenApiAccessStatslogSampleRate);
         }
+
         throw new AssertionError("Shouldn't get here");
     }
 
@@ -417,6 +423,11 @@ class ZygoteConnection {
     private Runnable handleApiDenylistExemptions(ZygoteServer zygoteServer, String[] exemptions) {
         return stateChangeWithUsapPoolReset(zygoteServer,
                 () -> ZygoteInit.setApiDenylistExemptions(exemptions));
+    }
+
+    private Runnable handleRefreshTypeface(ZygoteServer zygoteServer) {
+        return stateChangeWithUsapPoolReset(zygoteServer,
+                () -> Typeface.recreateDefaults());
     }
 
     private Runnable handleUsapPoolStatusChange(ZygoteServer zygoteServer, boolean newStatus) {
