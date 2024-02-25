@@ -1409,7 +1409,7 @@ public class Typeface {
 
             // Lets not forget about OEM fonts, include them regardless of the theme
             if (oemConfigFile.exists()) {
-                oemFontConfig = FontListParser.parse(oemConfigFile, OEM_FONT_CONFIG_LOCATION);
+                oemFontConfig = FontListParser.parse(oemConfigFile, OEM_FONT_DIR_LOCATION);
                 addFallbackFontsForFamilyName(oemFontConfig, fontConfig, SANS_SERIF_FAMILY_NAME);
                 addMissingFontFamilies(oemFontConfig, fontConfig);
                 addMissingFontAliases(oemFontConfig, fontConfig);
