@@ -168,6 +168,13 @@ public class KeyguardClockSwitch extends RelativeLayout {
                 R.dimen.weather_clock_smartspace_translateY);
         mStatusBarHeight = mContext.getResources().getDimensionPixelSize(
                 R.dimen.status_bar_height);
+
+        // Change also the fonts
+        if (mClock != null) {
+            Typeface tf = Typeface.create(com.android.internal.R.string.config_clockFontFamily,
+                    Typeface.NORMAL);
+            mClock.setTypeface(tf);
+        }
         updateStatusArea(/* animate= */false);
     }
 
